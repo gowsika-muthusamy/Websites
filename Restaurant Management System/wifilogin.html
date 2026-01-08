@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spicy Cafe WiFi Login</title>
+
+<style>
+body {
+    background-color: #fff3e0;
+    font-family: Arial;
+    text-align: center;
+    padding-top: 100px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 8px;
+    width: 250px;
+}
+
+button {
+    background-color: #d84315;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#passwordBox {
+    display: none; 
+}
+</style>
+</head>
+
+<body>
+
+<h1>📶 Spicy Cafe Wi‑Fi</h1>
+
+<input type="text" id="username" placeholder="Enter Username">
+<br>
+
+<div id="passwordBox">
+    <input type="password" id="password" placeholder="Enter WiFi Password">
+    <br>
+</div>
+
+<button onclick="checkUser()">Connect</button>
+
+<p id="message" style="color:red;"></p>
+
+<script>
+const WIFI_PASSWORD = "spicy123";
+
+function validateUsername(username) {
+ 
+    username = username.trim();
+
+   
+    if (username === "") {
+        return "Username cannot be empty!";
+    }
+
+    
+    if (username.length < 3 || username.length > 12) {
+        return "Username must be 3-12 characters long!";
+    }
+
+    let regex = /^[a-zA-Z0-9]+$/;
+    if (!regex.test(username)) {
+        return "Username can only contain letters and numbers!";
+    }
+
+    return true; // all validations passed
+}
+
+function checkUser() {
+    let usernameInput = document.getElementById("username");
+    let username = usernameInput.value;
+    let passwordBox = document.getElementById("passwordBox");
+    let password = document.getElementById("password").value;
+    let message = document.getElementById("message");
+
+   
+    let valid = validateUsername(username);
+    if (valid !== true) {
+        message.innerText = valid;
+        return;
+    }
+
+   
+    let users = JSON.parse(localStorage.getItem("wifiUsers")) || [];
+
+   
+    if (users.includes(username)) {
+        window.location.href = "wifisuccess.html";
+    } 
+
+    else {
+        passwordBox.style.display = "block";
+
+        if (password !== "") {
+            if (password === WIFI_PASSWORD) {
+                if (!users.includes(username)) {
+                    users.push(username);
+                    localStorage.setItem("wifiUsers", JSON.stringify(users));
+                }
+                window.location.href = "wifisuccess.html";
+            } else {
+                message.innerText = "Wrong WiFi Password!";
+            }
+        } else {
+            message.innerText = "New user detected. Enter WiFi password.";
+        }
+    }
+}
+</script>
+
+</body>
+</html>

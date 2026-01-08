@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WiFi Users Dashboard</title>
+
+<style>
+body {
+    background-color: #fff3e0;
+    font-family: Arial;
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    background: white;
+    margin: 10px;
+    padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📊 Connected Wi-Fi Users</h1>
+
+<ul id="userList"></ul>
+
+<script>
+let users = JSON.parse(localStorage.getItem("wifiUsers")) || [];
+let list = document.getElementById("userList");
+
+users.forEach(user => {
+    let li = document.createElement("li");
+    li.textContent = user;
+    list.appendChild(li);
+});
+</script>
+
+</body>
+</html>
