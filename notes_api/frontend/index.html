@@ -8,12 +8,15 @@
 <body>
 
   <div class="container">
-    <h1>My Notes</h1>
+     <h1>My Notes</h1>
+
     <div class="auth" id="authdiv">
-      <input type="email" id="email" placeholder="Email">
-      <input type="password" id="password" placeholder="Password">
-      <button onclick="login()">Login</button>
-       </div>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <div class="auth-buttons">
+    <button id="signupbtn" onclick="signup()">Signup</button>
+    <button id="loginbtn" onclick="login()">Login</button>
+  </div></div>
     <div class="form">
       <input type="text" id="title" placeholder="Title">
       <textarea id="content" placeholder="Write your note..."></textarea>

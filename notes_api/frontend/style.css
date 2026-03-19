@@ -22,6 +22,10 @@ h1 {
   gap: 10px;
   margin-bottom: 20px;
 }
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
 
 input, textarea {
   padding: 10px;

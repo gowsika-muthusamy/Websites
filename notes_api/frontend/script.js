@@ -1,6 +1,10 @@
 const API_URL = "http://localhost:5000/api/notes";
+const loginbtn =document.getElementById("loginbtn");
+  const signupbtn =document.getElementById("signupbtn");
+
 function getToken() {
   return localStorage.getItem("token");}
+
 function showLogoutButton() {
   const div = document.getElementById("authdiv");
 
@@ -10,10 +14,15 @@ function showLogoutButton() {
     button.id = "logoutBtn";
     button.onclick = logout;
     div.appendChild(button);}}
+
 function removeLogoutButton() {
   const btn = document.getElementById("logoutBtn");
   if (btn) btn.remove();}
+
+
 async function login() {
+  document.getElementById("email").disabled = true;
+  document.getElementById("password").disabled = true;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const res = await fetch("http://localhost:5000/api/auth/login", {
@@ -23,17 +32,32 @@ async function login() {
     body: JSON.stringify({ email, password })
   });
   const data = await res.json();
+  localStorage.setItem("userEmail", email);
   if (res.ok) {
     localStorage.setItem("token", data.token);
     showLogoutButton(); 
     alert("Login successful!");
     fetchNotes();
   } else {
-    alert(data.message || "Login failed");}}
+    alert(data.message || "Login failed");}
+  
+  loginbtn.style.display = "none";
+  signupbtn.style.display = "none";
+  }
+
+
 function logout() {
+  document.getElementById("email").value="";
+  document.getElementById("password").value="";
+  document.getElementById("email").disabled = false;
+  document.getElementById("password").disabled = false;
   localStorage.removeItem("token");
+  localStorage.removeItem('email');
   document.getElementById("notes").innerHTML = "";
   removeLogoutButton(); 
+   loginbtn.style.display = "block";
+  signupbtn.style.display = "block";
+
   alert("Logged out");}
 async function fetchNotes() {
   const token = getToken();
@@ -87,6 +111,7 @@ async function createNote() {
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
 fetchNotes();}
+
 async function editNote(id, oldTitle, oldContent) {
   const title = prompt("Edit title:", oldTitle);
   const content = prompt("Edit content:", oldContent);
@@ -102,6 +127,7 @@ async function editNote(id, oldTitle, oldContent) {
     alert("Error updating note");
     return;}
   fetchNotes();}
+
 async function deleteNote(id) {
   const res = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
@@ -112,9 +138,45 @@ async function deleteNote(id) {
     alert("Error deleting note");
     return;}
   fetchNotes();}
+
+
 if (getToken()) {
+const savedEmail = localStorage.getItem("userEmail");
+if (savedEmail) {
+  document.getElementById("email").value = savedEmail;
+  document.getElementById("email").disabled = true;
+  
+   
+}
   showLogoutButton();
+  loginbtn.style.display = "none";
+  signupbtn.style.display = "none";
   fetchNotes();
 } else {
   document.getElementById("notes").innerHTML = "<p>Please login</p>";
+}
+async function signup() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+   document.getElementById("email").disabled = true;
+  document.getElementById("password").disabled = true;
+
+  const res = await fetch("http://localhost:5000/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+localStorage.setItem("userEmail", email);
+  if (res.ok) {
+    localStorage.setItem("token", data.token);
+    showLogoutButton();   
+    alert("Signup successful!");
+    fetchNotes();
+  } else {
+    alert(data.message || "Signup failed");
+  }
 }
